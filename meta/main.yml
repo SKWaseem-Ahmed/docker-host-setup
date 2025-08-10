@@ -1,7 +1,7 @@
 galaxy_info:
   author: Waseem Ahmed
   role_name: docker_host_setup
-  namespace: waseem
+  namespace: S
   description: Set up a Docker host with systemd cgroup driver
   license: MIT
   min_ansible_version: "2.12"
