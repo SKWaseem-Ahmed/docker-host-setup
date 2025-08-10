@@ -1,0 +1,6 @@
+---
+- name: To install docker host on instances
+  hosts: all
+  become: true
+  roles:
+   - waseem.docker_host_setup

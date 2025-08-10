@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: MIT
+---
+
+# Debian/Ubuntu-specific
+- name: Install Docker dependencies (Debian/Ubuntu)
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker GPG key (Debian/Ubuntu)
+  apt_key:
+    url: "{{ GPG.url }}"
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker repository (Debian/Ubuntu)
+  apt_repository:
+    repo: "deb [arch=amd64] {{ Docker.repo }} {{ ansible_distribution_release }} stable"
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install Docker Engine (Debian/Ubuntu)
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+  when: ansible_os_family == "Debian"
+
+# Amazon Linux / RHEL / CentOS-specific
+- name: Install Docker (Amazon Linux / RHEL)
+  yum:
+    name: docker
+    state: present
+  when: ansible_os_family == "RedHat"
+
+# Common configuration for all OS
+- name: Configure Docker daemon
+  copy:
+    dest: "{{ Configure.path }}"
+    content: |
+      {
+        "exec-opts": ["native.cgroupdriver=systemd"]
+      }
+  notify: Restart Docker
